@@ -1,0 +1,23 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment
+venv/
+.env
+
+# Logs and misc
+*.log
+*.sqlite3
+
+# OS files
+.DS_Store
+
+# Jupyter or IDE
+*.ipynb
+.idea/
+.vscode/
+
+#models
+models/*.pkl
