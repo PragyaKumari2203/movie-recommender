@@ -26,6 +26,18 @@ def fetch_poster(title):
     data = res.json()
     return data.get('Poster', None)
 
+#Suggestion
+@app.route('/suggest', methods=['GET'])
+def suggest_movies():
+    query = request.args.get('q', '').lower()
+    if not query:
+        return jsonify([])
+
+    # Filter movie titles starting with the query
+    suggestions = movies[movies['title'].str.lower().str.startswith(query)]['title'].head(10).tolist()
+    return jsonify(suggestions)
+
+
 # Recommendation logic
 def recommend(movie_title):
     movie_title = movie_title.lower()
