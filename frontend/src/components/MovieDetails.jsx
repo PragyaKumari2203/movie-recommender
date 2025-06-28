@@ -10,8 +10,30 @@ export default function MovieDetails() {
   const [movie, setMovie] = useState(null);
   const [error, setError] = useState("");
   const [showPlot, setShowPlot] = useState(false);
+  const [videoId, setVideoId] = useState(null);
 
-  const API_KEY = import.meta.env.VITE_OMDB_API_KEY;
+  const OMDB_API_KEY = import.meta.env.VITE_OMDB_API_KEY;
+  const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
+
+  const watchTrailer = async (movieTitle) => {
+    try {
+      const response = await axios.get(
+        `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(
+          movieTitle + " trailer"
+        )}&type=video&maxResults=1&key=${YOUTUBE_API_KEY}`
+      );
+
+      if (response.status === 200 && response.data.items.length > 0) {
+        const id = response.data.items[0].id.videoId;
+        setVideoId(id);
+      } else {
+        setError("Trailer not found");
+      }
+    } catch (error) {
+      console.log(error);
+      setError("Failed to fetch trailer");
+    }
+  };
 
   useEffect(() => {
     if (!movieTitle) {
@@ -22,7 +44,9 @@ export default function MovieDetails() {
     const fetchMovie = async () => {
       try {
         const response = await axios.get(
-          `https://www.omdbapi.com/?apikey=${API_KEY}&t=${encodeURIComponent(movieTitle)}`
+          `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&t=${encodeURIComponent(
+            movieTitle
+          )}`
         );
 
         if (response.data.Response === "True") {
@@ -37,7 +61,7 @@ export default function MovieDetails() {
     };
 
     fetchMovie();
-  }, [movieTitle, API_KEY]);
+  }, [movieTitle, OMDB_API_KEY]);
 
   if (error) {
     return (
@@ -70,20 +94,43 @@ export default function MovieDetails() {
           className="w-full md:w-64 rounded shadow"
         />
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold mb-2 text-blue-800">{movie.Title}</h1>
-          <p><span className="font-semibold">Released:</span> {movie.Released}</p>
-          <p><span className="font-semibold">Runtime:</span> {movie.Runtime}</p>
-          <p><span className="font-semibold">Genre:</span> {movie.Genre}</p>
-          <p><span className="font-semibold">Director:</span> {movie.Director}</p>
-          <p><span className="font-semibold">Actors:</span> {movie.Actors}</p>
-          <p><span className="font-semibold">Language:</span> {movie.Language}</p>
+          <h1 className="text-3xl font-bold mb-2 text-blue-800">
+            {movie.Title}
+          </h1>
+          <p>
+            <span className="font-semibold">Released:</span> {movie.Released}
+          </p>
+          <p>
+            <span className="font-semibold">Runtime:</span> {movie.Runtime}
+          </p>
+          <p>
+            <span className="font-semibold">Genre:</span> {movie.Genre}
+          </p>
+          <p>
+            <span className="font-semibold">Director:</span> {movie.Director}
+          </p>
+          <p>
+            <span className="font-semibold">Actors:</span> {movie.Actors}
+          </p>
+          <p>
+            <span className="font-semibold">Language:</span> {movie.Language}
+          </p>
 
-          <button
-            onClick={() => setShowPlot(!showPlot)}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition w-fit"
-          >
-            {showPlot ? "Hide Plot" : "Show Plot"}
-          </button>
+          <div className="flex gap-1.5">
+            <button
+              onClick={() => setShowPlot(!showPlot)}
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition w-fit"
+            >
+              {showPlot ? "Hide Plot" : "Show Plot"}
+            </button>
+
+            <button
+              onClick={() => watchTrailer(movieTitle)}
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition w-fit"
+            >
+              Watch Trailer
+            </button>
+          </div>
 
           {showPlot && (
             <p className="mt-4 italic text-gray-700 border-l-4 border-blue-500 pl-4">
@@ -92,6 +139,21 @@ export default function MovieDetails() {
           )}
         </div>
       </div>
+
+      {/* Embed YouTube Player if videoId exists */}
+      {videoId && (
+        <div className="mt-6 flex justify-center">
+          <iframe
+            width="560"
+            height="315"
+            src={`https://www.youtube.com/embed/${videoId}`}
+            title="YouTube trailer"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+      )}
     </div>
   );
 }

@@ -12,7 +12,7 @@ OMDB_API_KEY = os.getenv('OMDB_API_KEY')
 app = Flask(__name__)
 CORS(app)
 
-# Load .pkl files from model folder
+# Load .pkl files from models folder
 base_dir = os.path.dirname(os.path.abspath(__file__))
 model_dir = os.path.join(base_dir, 'models')
 
