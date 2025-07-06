@@ -65,95 +65,144 @@ export default function MovieDetails() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen text-center px-4">
-        <p className="text-red-600 text-xl font-semibold">{error}</p>
-        <button
-          onClick={() => navigate(-1)}
-          className="mt-4 px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-        >
-          Go Back
-        </button>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-800 p-4">
+        <div className="bg-gray-700 p-6 rounded-xl shadow-sm max-w-md w-full text-center">
+          <p className="text-red-500 text-lg mb-6">{error}</p>
+          <button
+            onClick={() => navigate(-1)}
+            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors shadow-sm w-full sm:w-auto"
+          >
+            Go Back
+          </button>
+        </div>
       </div>
     );
   }
 
   if (!movie) {
     return (
-      <div className="flex items-center justify-center h-screen text-lg">
-        Loading...
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 text-lg">
+        Loading movie details...
       </div>
     );
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-6 mt-6 bg-white shadow-lg rounded-lg">
-      <div className="flex flex-col md:flex-row gap-6">
-        <img
-          src={movie.Poster}
-          alt={movie.Title}
-          className="w-full md:w-64 rounded shadow"
-        />
-        <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold mb-2 text-blue-800">
-            {movie.Title}
-          </h1>
-          <p>
-            <span className="font-semibold">Released:</span> {movie.Released}
-          </p>
-          <p>
-            <span className="font-semibold">Runtime:</span> {movie.Runtime}
-          </p>
-          <p>
-            <span className="font-semibold">Genre:</span> {movie.Genre}
-          </p>
-          <p>
-            <span className="font-semibold">Director:</span> {movie.Director}
-          </p>
-          <p>
-            <span className="font-semibold">Actors:</span> {movie.Actors}
-          </p>
-          <p>
-            <span className="font-semibold">Language:</span> {movie.Language}
-          </p>
+    <div className="min-h-screen bg-gray-800 py-4 px-4 sm:px-6">
+      <div className="max-w-4xl mx-auto">
+        {/* Back Button - Improved mobile sizing */}
+        <button
+          onClick={() => navigate(-1)}
+          className="mb-4 sm:mb-6 flex items-center text-blue-400 hover:text-blue-300 transition-colors text-sm sm:text-base"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+          </svg>
+          Back to results
+        </button>
 
-          <div className="flex gap-1.5">
-            <button
-              onClick={() => setShowPlot(!showPlot)}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition w-fit"
-            >
-              {showPlot ? "Hide Plot" : "Show Plot"}
-            </button>
+        {/* Movie Card - Stacked on mobile, side-by-side on larger screens */}
+        <div className="bg-white rounded-lg sm:rounded-xl shadow-sm overflow-hidden">
+          <div className="flex flex-col sm:flex-row">
+            {/* Poster Image - Full width on mobile, fixed width on larger screens */}
+            <div className="w-full sm:w-1/3 lg:w-1/4">
+              <div className="relative pt-[150%] overflow-hidden">
+                <img
+                  src={movie.Poster !== "N/A" ? movie.Poster : "/default-poster.jpg"}
+                  alt={movie.Title}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.src = "/default-poster.jpg";
+                    e.target.className = "absolute inset-0 w-full h-full object-contain bg-gray-100 p-4";
+                  }}
+                />
+              </div>
+            </div>
 
-            <button
-              onClick={() => watchTrailer(movieTitle)}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition w-fit"
-            >
-              Watch Trailer
-            </button>
+            {/* Movie Details - Full width on mobile, 2/3 on larger screens */}
+            <div className="p-4 sm:p-6 md:p-8 w-full sm:w-2/3 lg:w-3/4">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2 leading-tight">
+                {movie.Title}
+              </h1>
+              
+              {/* Metadata row - wraps on small screens */}
+              <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4">
+                <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded">
+                  {movie.Year}
+                </span>
+                <span className="hidden sm:inline text-gray-400">•</span>
+                <span className="text-gray-600 text-sm sm:text-base">{movie.Runtime}</span>
+                <span className="hidden sm:inline text-gray-400">•</span>
+                <span className="text-gray-600 text-sm sm:text-base">{movie.Rated}</span>
+              </div>
+
+              {/* Details grid - 1 column on mobile, 2 on larger screens */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6 text-sm">
+                <div>
+                  <p className="text-gray-500 text-xs sm:text-sm">Genre</p>
+                  <p className="font-medium text-sm sm:text-base">{movie.Genre}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 text-xs sm:text-sm">Director</p>
+                  <p className="font-medium text-sm sm:text-base">{movie.Director}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 text-xs sm:text-sm">Cast</p>
+                  <p className="font-medium text-sm sm:text-base">{movie.Actors}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 text-xs sm:text-sm">Language</p>
+                  <p className="font-medium text-sm sm:text-base">{movie.Language}</p>
+                </div>
+              </div>
+
+              {/* Action Buttons - Stacked on mobile, inline on larger screens */}
+              <div className="flex flex-col sm:flex-row gap-2 mb-4 sm:mb-6">
+                <button
+                  onClick={() => setShowPlot(!showPlot)}
+                  className={`px-4 py-2 rounded-lg transition-colors text-sm sm:text-base ${
+                    showPlot ? 'bg-gray-200 text-gray-800' : 'bg-blue-500 text-white hover:bg-blue-600'
+                  }`}
+                >
+                  {showPlot ? "Hide Plot" : "Show Plot"}
+                </button>
+
+                <button
+                  onClick={() => watchTrailer(movieTitle)}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm sm:text-base"
+                >
+                  Watch Trailer
+                </button>
+              </div>
+
+              {showPlot && (
+                <div className="bg-gray-50 p-3 sm:p-4 rounded-lg border border-gray-200">
+                  <h3 className="font-semibold text-gray-700 text-sm sm:text-base mb-2">Plot</h3>
+                  <p className="text-gray-600 text-sm sm:text-base">{movie.Plot}</p>
+                </div>
+              )}
+            </div>
           </div>
-
-          {showPlot && (
-            <p className="mt-4 italic text-gray-700 border-l-4 border-blue-500 pl-4">
-              {movie.Plot}
-            </p>
-          )}
         </div>
+
+        {/* Trailer Section - Responsive iframe */}
+        {videoId && (
+          <div className="mt-6 bg-white rounded-lg sm:rounded-xl shadow-sm overflow-hidden">
+            <div className="p-3 sm:p-4 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-800">Trailer</h2>
+            </div>
+            <div className="aspect-w-16 aspect-h-9">
+              <iframe
+                className="w-full h-48 sm:h-64 md:h-80 lg:h-96"
+                src={`https://www.youtube.com/embed/${videoId}?modestbranding=1`}
+                title="YouTube trailer"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* Embed YouTube Player if videoId exists */}
-      {videoId && (
-        <div className="mt-6 flex justify-center">
-          <iframe
-            width="560"
-            height="315"
-            src={`https://www.youtube.com/embed/${videoId}`}
-            title="YouTube trailer"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </div>
-      )}
     </div>
   );
 }

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import "../App.css";
 import { Link } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
-
+import '../App.css'
 
 function App() {
   const [movie, setMovie] = useState("");
@@ -10,7 +9,7 @@ function App() {
   const [error, setError] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
   // Fetch matching movie titles
   useEffect(() => {
@@ -37,7 +36,6 @@ function App() {
     setMovie(title);
     setSuggestions([]);
     setShowSuggestions(false);
-
     document.getElementById("movie-input")?.blur();
   };
 
@@ -56,108 +54,129 @@ function App() {
     } catch {
       setError("Server error. Is Flask running?");
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setShowSuggestions(false);
-    setSuggestions([]); 
+    setSuggestions([]);
     fetchRecommendations(movie);
   };
+
   return (
-    <div className="min-h-screen bg-gray-800 text-white shadow-md px-4">
-      <h1 className="text-4xl font-extrabold text-center text-cyan-500 mb-8 drop-shadow">
-        🎬 Movie Recommender
-      </h1>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white px-4 py-8">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <header className="text-center mb-12">
+          <h1 className="text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
+            MovieMagic
+          </h1>
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+            Discover your next favorite film based on movies you love
+          </p>
+        </header>
 
-      <form
-        onSubmit={handleSubmit}
-        className="max-w-2xl mx-auto flex flex-col md:flex-row gap-4 items-center justify-center mb-10 relative"
-      >
-        <div className="w-full md:flex-1 relative">
-          <input
-            id="movie-input" 
-            type="text"
-            value={movie}
-            onChange={(e) => setMovie(e.target.value)}
-            placeholder="Enter movie title"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow focus:ring-2 focus:ring-blue-500 focus:outline-none text-white"
-            required
-            onFocus={() => suggestions.length && setShowSuggestions(true)}
-          />
+        {/* Search Form */}
+        <form
+          onSubmit={handleSubmit}
+          className="max-w-2xl mx-auto mb-12 relative"
+        >
+          <div className="relative">
+            <input
+              id="movie-input"
+              type="text"
+              value={movie}
+              onChange={(e) => setMovie(e.target.value)}
+              placeholder="Type a movie you love..."
+              className="w-full px-6 py-4 rounded-full bg-gray-800 border border-gray-700 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/30 outline-none transition-all text-white placeholder-gray-400 shadow-lg"
+              required
+              onFocus={() => suggestions.length && setShowSuggestions(true)}
+            />
+            <button
+              type="submit"
+              className="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-full font-medium hover:opacity-90 transition-opacity shadow-lg"
+            >
+              Recommend
+            </button>
 
-          {showSuggestions && suggestions.length > 0 && (
-            <ul className="absolute z-10 w-full bg-white text-black rounded shadow mt-1 max-h-60 overflow-auto">
-              {suggestions.map((suggestion, i) => (
-                <li
-                  key={i}
-                  onClick={() => handleSelectSuggestion(suggestion)}
-                  className="px-4 py-2 hover:bg-blue-100 cursor-pointer"
-                >
-                  {suggestion}
-                </li>
-              ))}
-            </ul>
+            {showSuggestions && suggestions.length > 0 && (
+              <ul className="absolute z-10 w-full mt-2 bg-gray-800 border border-gray-700 rounded-xl shadow-2xl overflow-hidden">
+                {suggestions.map((suggestion, i) => (
+                  <li
+                    key={i}
+                    onClick={() => handleSelectSuggestion(suggestion)}
+                    className="text-1rem px-6 py-1 hover:bg-gray-700 cursor-pointer transition-colors border-b border-gray-700 last:border-b-0"
+                  >
+                    {suggestion}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </form>
+
+        {/* Loading & Error States */}
+        <div className="text-center min-h-[200px] flex items-center justify-center">
+          {error && (
+            <div className="bg-red-900/30 border border-red-700 text-red-200 px-6 py-4 rounded-xl max-w-md mx-auto">
+              {error}
+            </div>
+          )}
+
+          {loading && (
+            <div className="flex flex-col items-center">
+              <ClipLoader size={60} color="#06b6d4" />
+              <p className="mt-4 text-cyan-300">Finding perfect recommendations...</p>
+            </div>
           )}
         </div>
-        <button
-          type="submit"
-          className="px-6 py-2 bg-pink-600 text-white rounded-lg hover:bg-cyan-500 hover:text-gray-700 transition font-semibold shadow"
-        >
-          Get Recommendations
-        </button>
-      </form>
 
-      {error && (
-        <p className="text-center text-red-600 font-medium mb-4">{error}</p>
-      )}
+        {/* Recommendations */}
+        {!loading && recommendations.length > 0 && (
+          <section className="mb-16">
+            <h2 className="text-3xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+              You Might Also Enjoy
+            </h2>
 
-      {loading && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <ClipLoader size={50} color="#36d7b7" className="centre" />
-        </div>
-      )}
-
-      {!loading && recommendations.length > 0 && (
-        <div className="max-w-5xl mx-auto ">
-          <h2 className="text-2xl font-semibold text-gray-100 mb-6 text-center">
-            Recommended Movies
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 ">
-            {recommendations.map((movie, index) => (
-              <div
-                key={index}
-                className="bg-gray-700 rounded-lg shadow-md p-4 flex flex-col items-center hover:shadow-xl transition"
-              >
-                <img
-                  src={movie.poster}
-                  alt={movie.title}
-                  className="w-40 h-auto rounded mb-3 shadow"
-                />
-                <p className="text-lg font-semibold text-center mb-2 text-blue-200">
-                  {movie.title}
-                </p>
-                <Link
-                  to="/details"
-                  state={{ movie }}
-                  className="mt-auto px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm"
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {recommendations.map((movie, index) => (
+                <div
+                  key={index}
+                  className="group bg-gray-800/50 hover:bg-gray-800/80 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-700 hover:border-cyan-400/30"
                 >
-                  Know More
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+                  <div className="relative pt-[150%] overflow-hidden bg-gray-800">
+  <img
+    src={movie.poster}
+    alt={movie.title}
+    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+    onError={(e) => {
+      e.target.src = "/default-posterjpeg";
+      e.target.className = "absolute inset-0 w-full h-full object-contain p-4";
+      e.target.onerror = null; // Prevent infinite loop if default image fails
+    }}
+  />
+</div>
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold text-white mb-2 truncate">
+                      {movie.title}
+                    </h3>
+                    <Link
+                      to="/details"
+                      state={{ movie }}
+                      className="inline-block w-full text-center px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-700 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+                    >
+                      View Details
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+      </div>
     </div>
   );
 }
