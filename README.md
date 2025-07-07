@@ -31,44 +31,42 @@ cd movierecs
 ```bash
 cd backend
 python -m venv venv
-# On Windows: venv\Scripts\activate
-source venv/bin/activate  
+venv\Scripts\activate #On Mac:  source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Create .env file:
+### Create .env file:
+```bash
 OMDB_API_KEY=your_api_key_here
+```
 
-
-Run backend:
+### Run backend:
 ```bash
 python app.py
 ```
 
-### 3.  cd frontend
+### 3. Setup frontend
 ```bash
 npm install
 ```
 
-Create .env file:
+### Create .env file:
+```bash
 VITE_OMDB_API_KEY=your_api_key_here
 VITE_YOUTUBE_API_KEY=your_api_key_here
+```
 
-Run frontend
+### Run frontend
 ```bash
 npm run dev
 ```
 
 
-Usage
--Search for any movie in the search bar
--Get instant recommendations of similar movies
--Click any movie to view detailed information
-=Watch trailers directly in the app
+## Usage
+-***Search for any movie in the search bar***
+-***Get instant recommendations of similar movies***
+-***Click any movie to view detailed information***
+-***Watch trailers directly in the app***
 
 
-API Endpoints
-Endpoint	  Method	   Description
-/suggest	  GET	    Get movie title suggestions
-/recommend	GET    	Get movie recommendations
 
