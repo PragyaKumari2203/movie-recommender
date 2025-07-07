@@ -62,11 +62,11 @@ npm run dev
 ```
 
 
-## Usage
--***Search for any movie in the search bar***
--***Get instant recommendations of similar movies***
--***Click any movie to view detailed information***
--***Watch trailers directly in the app***
+** Usage**:
+-Search for any movie in the search bar
+-Get instant recommendations of similar movies
+-Click any movie to view detailed information
+-Watch trailers directly in the app
 
 
 
