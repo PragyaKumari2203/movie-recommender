@@ -23,8 +23,8 @@
 
 ### 1. Clone the repository  
 ```bash
-git clone https://github.com/PragyaKumari2203/movierecs.git
-cd movierecs
+git clone https://github.com/PragyaKumari2203/movie-recommender.git
+cd movie-recommender
 ```
 
 ### 2. Set up backend
