@@ -24,19 +24,25 @@
 - Scikit-learn for cosine similarity  
 - OMDb API integration  
 
-## Installation  
+## Installation 
+
+## 🛠️ Project Setup
+
 
 ### 1. Clone the repository  
 ```bash
 git clone https://github.com/PragyaKumari2203/movierecs.git
 cd movierecs
+bash```
 
 ### 2. Set up backend
+```bash
 cd backend
 python -m venv venv
 # On Windows: venv\Scripts\activate
 source venv/bin/activate  
 pip install -r requirements.txt
+bash```
 
 Create .env file:
 OMDB_API_KEY=your_api_key_here
