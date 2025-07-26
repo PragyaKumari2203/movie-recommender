@@ -71,7 +71,7 @@ function App() {
         {/* Header */}
         <header className="text-center mb-12">
           <h1 className="text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
-            MovieMagic
+            MovieRecs
           </h1>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
             Discover your next favorite film based on movies you love

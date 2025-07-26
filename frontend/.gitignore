@@ -25,4 +25,8 @@ dist-ssr
 
 
 # Environment
+venv/
 .env
+.venv/
+env/
+ENV/

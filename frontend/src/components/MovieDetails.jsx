@@ -80,13 +80,22 @@ export default function MovieDetails() {
   }
 
   if (!movie) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 text-lg">
-        Loading movie details...
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="flex space-x-2 mb-4">
+        {[...Array(3)].map((_, i) => (
+          <div 
+            key={i}
+            className="w-3 h-3 bg-indigo-500 rounded-full animate-bounce"
+            style={{ animationDelay: `${i * 0.15}s` }}
+          />
+        ))}
       </div>
-    );
-  }
-
+      <p className="text-gray-700 text-lg font-medium">Loading movie details...</p>
+      <p className="text-gray-500 text-sm mt-2">Fetching the finest details for you</p>
+    </div>
+  );
+}
   return (
     <div className="min-h-screen bg-gray-800 py-4 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
